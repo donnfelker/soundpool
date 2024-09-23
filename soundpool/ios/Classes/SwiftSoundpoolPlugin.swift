@@ -152,7 +152,10 @@ public class SwiftSoundpoolPlugin: NSObject, FlutterPlugin {
                     if (enableRate){
                         audioPlayer.enableRate = true
                     }
+                    // This method activates the audio session automatically
                     audioPlayer.prepareToPlay()
+                    deactivateAudioSessionIfNeeded()
+                    
                     let index = soundpool.count
                     soundpool.append(audioPlayer)
                     result(index)
@@ -174,7 +177,11 @@ public class SwiftSoundpoolPlugin: NSObject, FlutterPlugin {
                                     if (self.enableRate){
                                         audioPlayer.enableRate = true
                                     }
+                                    
+                                    // This method activates the audio session automatically
                                     audioPlayer.prepareToPlay()
+                                    deactivateAudioSessionIfNeeded()
+
                                     let index = self.self.soundpool.count
                                     self.self.soundpool.append(audioPlayer)
                                     value = index
@@ -244,7 +251,11 @@ public class SwiftSoundpoolPlugin: NSObject, FlutterPlugin {
                     if (enableRate){
                         audioPlayer.enableRate = true
                     }
+                    
+                    // This method activates the audio session automatically
                     audioPlayer.prepareToPlay()
+                    deactivateAudioSessionIfNeeded()
+
                     soundpool[soundId] = audioPlayer
                 } catch {
                     result(0)
@@ -305,6 +316,19 @@ public class SwiftSoundpoolPlugin: NSObject, FlutterPlugin {
                 result(nil)
             default:
                 result("notImplemented")
+            }
+        }
+
+        func deactivateAudioSessionIfNeeded() {
+            // Only deactivate audio session if it is not managed by 'audio_session' plugin
+            if NSClassFromString("AudioSessionPlugin") != nil {
+                print("Deactivating audio session after preparing the player, as audio session is managed by 'audio_session' plugin")
+                do {
+                    // attempt to deactivate audio session
+                    try AVAudioSession.sharedInstance().setActive(false)
+                } catch {
+                    print("Failed to deactivate audio session: \(error.localizedDescription)")
+                }
             }
         }
         
