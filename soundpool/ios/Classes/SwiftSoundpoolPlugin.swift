@@ -180,7 +180,7 @@ public class SwiftSoundpoolPlugin: NSObject, FlutterPlugin {
                                     
                                     // This method activates the audio session automatically
                                     audioPlayer.prepareToPlay()
-                                    deactivateAudioSessionIfNeeded()
+                                    self.deactivateAudioSessionIfNeeded()
 
                                     let index = self.self.soundpool.count
                                     self.self.soundpool.append(audioPlayer)
